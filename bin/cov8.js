@@ -4,7 +4,6 @@
 const yargs = require('yargs')
 const exclude = require('test-exclude')
 const sw = require('spawn-wrap')
-const Report = require('../src/report')
 const foreground = require('foreground-child')
 const mkdirp = require('mkdirp')
 const rimraf = require('rimraf')
@@ -45,7 +44,12 @@ if (yargs.argv._[0] === 'clear') {
   // reporting
   const reporters = yargs.argv._
   reporters.shift()
-  new Report(yargs.argv['coverage-directory'], reporters).generateReport()
+  if (Number(process.version.match(/^v(\d+\.\d+)/)[1]) > 8.0) {
+    const Report = require('../src/report')
+    new Report(yargs.argv['coverage-directory'], reporters).generateReport()
+  } else {
+    console.error('[COV8] This module only works for node > 8.0')
+  }
 } else {
   // launch coverage
   sw([require.resolve('../src/launch.js')], {

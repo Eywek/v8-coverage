@@ -2,7 +2,6 @@
 
 const debug = require('debug')('cov8:execute')
 const exclude = require('test-exclude')
-const Report = require('./report')
 const path = require('path')
 
 module.exports = class Execute {
@@ -17,6 +16,8 @@ module.exports = class Execute {
     debug(`Execute with options ${JSON.stringify(options)}`)
     this.directory = options.directory
     this.enabled = Number(process.version.match(/^v(\d+\.\d+)/)[1]) > 8.0 // Check node version
+    if (!this.enabled) return debug('Node < 8.0: Not enable profiler')
+    this.Report = require('./report')
     this.exclude = exclude({
       include: options.include,
       exclude: options.exclude
@@ -67,7 +68,7 @@ module.exports = class Execute {
       debug(`Handle profiler coverage (Reports: ${result.result.length})`)
       result = this.filterResult(result.result)
       debug(`Formatted reports: ${result.length}`)
-      new Report(this.directory).store(result)
+      new this.Report(this.directory).store(result)
     })
   }
 
@@ -76,7 +77,8 @@ module.exports = class Execute {
    * @param {Object} result V8 result
    */
   filterResult (result) {
-    result = result.filter(({url}) => {
+    result = result.filter((file) => {
+      let url = file.url
       url = url.replace('file://', '')
       return path.isAbsolute(url) &&
         this.exclude.shouldInstrument(url) &&

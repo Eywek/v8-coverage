@@ -45,7 +45,7 @@ if (yargs.argv._[0] === 'clear') {
   // reporting
   const reporters = yargs.argv._
   reporters.shift()
-  new Report(yargs.argv['coverage-directory'], [...reporters]).generateReport()
+  new Report(yargs.argv['coverage-directory'], reporters).generateReport()
 } else {
   // launch coverage
   sw([require.resolve('../src/launch.js')], {

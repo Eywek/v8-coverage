@@ -3,10 +3,10 @@
 Code-coverage using [v8's Inspector](https://nodejs.org/dist/latest-v8.x/docs/api/inspector.html)
 that's compatible with [Istanbul's reporters](https://istanbul.js.org/docs/advanced/alternative-reporters/).
 
-Like [nyc](https://github.com/istanbuljs/nyc), c8 just magically works:
+Like [nyc](https://github.com/istanbuljs/nyc), cov8 just magically works:
 
 ```bash
-npm i cov8 -g
+yarn global add cov8
 cov8 node foo.js
 ```
 

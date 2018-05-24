@@ -11,6 +11,9 @@ const executer = new Execute({
   exclude: argv.exclude,
   directory: argv.directory
 })
+if (!executer.enabled) {
+  console.error('[COV8] This module only works for node > 8.0')
+}
 // Handle stop profiler on script stop
 onExit(_ => executer.storeCoverage(), {alwaysLast: true})
 // Run script

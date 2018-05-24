@@ -2,7 +2,6 @@
 
 const debug = require('debug')('cov8:execute')
 const exclude = require('test-exclude')
-const inspector = require('inspector')
 const Report = require('./report')
 const path = require('path')
 
@@ -17,6 +16,7 @@ module.exports = class Execute {
   constructor (options) {
     debug(`Execute with options ${JSON.stringify(options)}`)
     this.directory = options.directory
+    this.enabled = Number(process.version.match(/^v(\d+\.\d+)/)[1]) > 8.0 // Check node version
     this.exclude = exclude({
       include: options.include,
       exclude: options.exclude
@@ -28,7 +28,9 @@ module.exports = class Execute {
    * Try to launch v8 inspector and start profiling coverage
    */
   startProfiler () {
+    if (!this.enabled) return debug('Node < 8.0: Not enable profiler')
     debug('Start profiler')
+    const inspector = require('inspector')
     inspector.open(0, true)
     this.session = new inspector.Session()
     this.session.connect()
@@ -46,6 +48,7 @@ module.exports = class Execute {
    * @param {Function} cb Callback called with <err, response>
    */
   stopProfiler (cb) {
+    if (!this.enabled) return debug('Node < 8.0: Profiler not enabled')
     debug('Stop profiler')
     this.session.post('Profiler.takePreciseCoverage', (err, data) => {
       this.session.post('Profiler.stopPreciseCoverage')
@@ -57,6 +60,7 @@ module.exports = class Execute {
    * Stop profiler and store coverage into coverage.map from /tmp/*.json
    */
   storeCoverage () {
+    if (!this.enabled) return debug('Node < 8.0: Profiler not enabled')
     debug('Store coverage')
     this.stopProfiler((err, result) => {
       if (err) return debug(`Got an error on profiler stop: ${err.message}`)

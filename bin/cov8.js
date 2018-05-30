@@ -25,6 +25,12 @@ yargs // eslint-disable-line
     default: './coverage',
     describe: 'directory to output coverage JSON and reports'
   })
+  .option('forks', {
+    alias: 'f',
+    default: false,
+    boolean: true,
+    describe: 'only cover fork processes'
+  })
   .command('<script>')
   .describe('default', 'Execute test')
   .example('$0 mocha test.js', 'Execute test and generate coverage')
@@ -56,7 +62,8 @@ if (yargs.argv._[0] === 'clear') {
     COV8_OPTIONS: JSON.stringify({
       include: yargs.argv.include,
       exclude: yargs.argv.exclude,
-      directory: yargs.argv['coverage-directory']
+      directory: yargs.argv['coverage-directory'],
+      forks: yargs.argv.forks
     })
   })
   // launch test

@@ -7,6 +7,7 @@ const sw = require('spawn-wrap')
 const foreground = require('foreground-child')
 const mkdirp = require('mkdirp')
 const rimraf = require('rimraf')
+const path = require('path')
 
 yargs // eslint-disable-line
   .usage('$0 [opts] <script> [opts]')
@@ -42,7 +43,7 @@ yargs // eslint-disable-line
   .demandCommand(1)
   .argv
 
-mkdirp.sync(yargs.argv['coverage-directory'])
+mkdirp.sync(path.join(yargs.argv['coverage-directory'], './tmp'))
 
 if (yargs.argv._[0] === 'clear') {
   rimraf.sync(yargs.argv['coverage-directory'])

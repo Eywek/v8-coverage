@@ -8,6 +8,7 @@ const CoverageMap = require('istanbul-lib-coverage/lib/coverage-map').CoverageMa
 const libReport = require('istanbul-lib-report')
 const reports = require('istanbul-reports')
 const v8ToIstanbul = require('v8-to-istanbul')
+const uuid = require('node-uuid')
 
 module.exports = class Report {
   /**
@@ -20,8 +21,8 @@ module.exports = class Report {
     this.reporters = reporters
     this.directory = directory
 
-    this.mapPath = path.resolve(this.directory, 'coverage.map')
-    debug(`mapPath=${this.mapPath}`)
+    this.reportsPaths = path.resolve(this.directory, './tmp')
+    debug(`reportsPaths=${this.reportsPaths}`)
   }
 
   /**
@@ -30,12 +31,12 @@ module.exports = class Report {
    */
   store (result) {
     debug('Try to store reports')
-    const reports = this.getReports(result)
-    const previousMap = this.getPreviousMap()
+    const reportsList = this.getReports(result)
     debug('Store reports')
-    const map = JSON.stringify(this.mergeMap(previousMap, reports))
-    debug('Store map')
-    fs.writeFileSync(this.mapPath, map)
+    reportsList.forEach((report) => {
+      fs.writeFileSync(path.join(this.reportsPaths, `${uuid.v4()}.json`), JSON.stringify(report))
+    })
+    debug('Reports stored')
   }
 
   /**
@@ -52,18 +53,22 @@ module.exports = class Report {
   }
 
   /**
-   * Retrieve previous map from previous test or new coverage map
+   * Retrieve previous reports from previous test
    */
-  getPreviousMap () {
+  getPreviousReports () {
     debug('Try to get previous map')
-    let data = null
-    try {
-      data = fs.readFileSync(this.mapPath)
-    } catch (e) {
-      return libCoverage.createCoverageMap({}) // create new map
-    }
-    debug('Previous map got')
-    return libCoverage.createCoverageMap(JSON.parse(data))
+    let reports = []
+    fs.readdirSync(this.reportsPaths).map((reportName) => {
+      let report = null
+      try {
+        report = JSON.parse(fs.readFileSync(path.join(this.reportsPaths, reportName)))
+      } catch (err) {
+        return debug(`Got an error on reading a report: ${err.message}`)
+      }
+      reports.push(report)
+    })
+    debug('Previous reports got')
+    return reports
   }
 
   /**
@@ -148,7 +153,8 @@ module.exports = class Report {
    */
   generateReport () {
     debug('Try to generate report')
-    const map = this.getPreviousMap()
+    const reportsList = this.getPreviousReports()
+    const map = this.mergeMap(libCoverage.createCoverageMap({}), reportsList)
     const context = libReport.createContext({
       dir: this.directory
     })

@@ -2,11 +2,13 @@
 
 Code-coverage using [v8's Inspector](https://nodejs.org/dist/latest-v8.x/docs/api/inspector.html)
 that's compatible with [Istanbul's reporters](https://istanbul.js.org/docs/advanced/alternative-reporters/).
+_This tool is inspired from [c8](https://github.com/bcoe/c8)._
 
 Like [nyc](https://github.com/istanbuljs/nyc), cov8 just magically works:
 
+
 ```bash
-yarn global add cov8
+yarn global add v8-coverage
 cov8 node foo.js
 ```
 
@@ -41,6 +43,7 @@ Some options can be pass as parameter like:
 - include _you can specify which files you want to cover_
 - exclude _you can specify which files you want to don't cover_
 - coverage-directory _where coverage files are stored (map/reports), `./coverage` by default_
+- forks _use this option if you want to collect coverage from forked process_
 
 You can get more help with:
 

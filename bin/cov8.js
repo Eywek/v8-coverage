@@ -11,6 +11,7 @@ const path = require('path')
 
 yargs // eslint-disable-line
   .usage('$0 [opts] <script> [opts]')
+  .pkgConf('nyc')
   .option('exclude', {
     alias: 'x',
     default: exclude.defaultExclude,

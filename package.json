@@ -1,6 +1,6 @@
 {
   "name": "v8-coverage",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Use native v8 inspector to generate coverage reports",
   "main": "index.js",
   "bin": {

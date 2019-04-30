@@ -8,7 +8,7 @@ const CoverageMap = require('istanbul-lib-coverage/lib/coverage-map').CoverageMa
 const libReport = require('istanbul-lib-report')
 const reports = require('istanbul-reports')
 const v8ToIstanbul = require('v8-to-istanbul')
-const uuid = require('node-uuid')
+const uuid = require('uuid')
 
 module.exports = class Report {
   /**

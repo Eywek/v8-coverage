@@ -34,7 +34,7 @@
     "rimraf": "^2.6.2",
     "signal-exit": "^3.0.2",
     "spawn-wrap": "^1.4.2",
-    "test-exclude": "^4.2.1",
+    "test-exclude": "^5.2.2",
     "uuid": "^3.3.2",
     "v8-to-istanbul": "1.2.0",
     "yargs": "^11.0.0"

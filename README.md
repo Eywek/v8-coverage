@@ -1,3 +1,7 @@
+# [DEPRECATED] Use c8
+
+This tool was built when [c8](https://github.com/bcoe/c8) package wasn't ready to be used, c8 has now more functionality and works better that this module. So you should really use c8.
+
 # cov8 - Native V8 coverage tool
 
 Code-coverage using [v8's Inspector](https://nodejs.org/dist/latest-v8.x/docs/api/inspector.html)
